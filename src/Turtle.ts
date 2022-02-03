@@ -6,7 +6,7 @@ export class Turtle {
   y = 0;
   angle = -Turtle.p5.HALF_PI;
   size = 5;
-  color = "#432222FF";
+  color = "#111";
   dl = 4;
   setHeading(heading) {
     // console.log({ heading });
@@ -18,22 +18,28 @@ export class Turtle {
   left(angle) {
     this.angle -= (angle / 180) * Turtle.p5.TWO_PI;
   }
-  forward(len, mul = 6) {
+  forward(len, mul) {
     let x1 = this.x;
     let y1 = this.y;
     this.x += len * Turtle.p5.cos(this.angle); //((this.angle * Turtle.p5.PI) / 180 - Turtle.p5.TWO_PI);
     this.y += len * Turtle.p5.sin(this.angle); //((this.angle * Turtle.p5.PI) / 180 - Turtle.p5.TWO_PI);
-    Turtle.p5.strokeWeight(this.size * mul);
-    // console.log({
-    //   len,
-    //   s: this.size,
-    //   cos: Turtle.p5.cos(this.angle),
-    //   angle: this.angle,
-    //   x: this.x,
-    //   y: this.y
-    // });
-    Turtle.p5.stroke(this.color);
-    Turtle.p5.line(x1, y1, this.x, this.y);
+    if (
+      this.size * this.size * mul + len > 8 ||
+      (this.color !== "#111" && this.size > 0.5)
+    ) {
+      Turtle.p5.strokeWeight(this.size * mul);
+
+      // console.log({
+      //   len,
+      //   s: this.size,
+      //   cos: Turtle.p5.cos(this.angle),
+      //   angle: this.angle,
+      //   x: this.x,
+      //   y: this.y
+      // });
+      Turtle.p5.stroke(this.color);
+      Turtle.p5.line(x1, y1, this.x, this.y);
+    }
     //this.x=x1;this.y=y1;
   }
 
