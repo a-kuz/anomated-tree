@@ -4,7 +4,7 @@ import P5 from "p5";
 import "./styles.scss";
 import { drawIt } from "./drawing";
 import { AXIOM11 } from "./consts";
-const itr = 9;
+const itr = 10;
 let axiom;
 
 if (itr === 11) axiom = AXIOM11;
