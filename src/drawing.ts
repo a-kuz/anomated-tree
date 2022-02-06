@@ -1,13 +1,11 @@
 import P5 from "p5";
+
 import { Turtle } from "./Turtle";
-
-export function drawIt(p5: P5, pdl = 9, axiom = "2220") {
+let totalTime = 0;
+export function drawIt(p5: P5, pdl = 9, axiom) {
   let startDl = pdl;
-  let maxDl = 11;
+  let maxDl = 12;
   Turtle.p5 = p5;
-
-  let axmTemp = "";
-  let itr = 11;
   let dl = pdl;
 
   let stc = [];
@@ -15,48 +13,50 @@ export function drawIt(p5: P5, pdl = 9, axiom = "2220") {
 
   const randint = p5.random;
 
-  let translate = { "1": "21", "0": "1[-20]+20" };
-  // console.log(Array.from(axiom));
-
-  const t = Array.from(Array(itr).keys());
-  if (axiom === "220")
-    for (let k in t) {
-      // console.log({ k });
-      for (let ch of Array.from(axiom)) {
-        // console.log({ ch, trch: translate[ch] });
-        if (translate[ch]) axmTemp += translate[ch];
-        else axmTemp += ch;
-      }
-      axiom = axmTemp;
-      axmTemp = "";
-    }
-  //console.log({ axiom });
+  // console.log({ axiom });
   let mul = p5.map(startDl, 0, maxDl, 0, 6);
+  let lastDtime = 0;
+  let maxDelta = 0;
+
+  totalTime += p5.deltaTime / 2;
+  totalTime = totalTime % Number.MAX_SAFE_INTEGER;
+  const divider = 2450;
+  const iMod = totalTime % divider;
+  const iDivMod2 = p5.floor(totalTime / divider) % 2;
+  let dTime = -1 * iDivMod2 * iMod + divider * iDivMod2 + (1 - iDivMod2) * iMod;
+  if (iDivMod2) dTime = Math.cos((dTime / divider) * p5.TWO_PI);
+  else dTime = Math.cos((dTime / divider) * p5.TWO_PI);
+  const delta = p5.abs(dTime - lastDtime);
+  maxDelta = maxDelta > delta ? maxDelta : delta;
+  lastDtime = dTime;
+  let mlt = p5.map(startDl, 0, maxDl, 4, 10);
+  let mlt2 = p5.map(dl, 8, 12, 0, 0.7);
   for (let ch of Array.from(axiom)) {
-    //console.log(ch);
-    if (ch === "+") turtle.right(randint(-16, 16));
-    else if (ch === "-") turtle.left(randint(-16, 16));
+    //const dTime2 = -1*iDivMod2*iMod+100*iDivMod2+(1−iDivMod2)*iMod;
+
+    if (ch === "+") turtle.right(randint(0, 13) + dTime * p5.random(0, 2));
+    else if (ch === "-") turtle.left(randint(0, 13) + dTime * p5.random(0, 2));
     else if (ch === "2") {
       if (randint(0, 10) > 4) {
         turtle.forward(dl, mul);
       }
     } else if (ch === "1") {
-      if (randint(0, 10) > 4) {
+      if (randint(0, 10) > 7) {
         turtle.forward(dl, mul);
       }
     } else if (ch === "0") {
       stc.push(turtle.pensize());
 
-      turtle.pensize(0.18 * mul + dl > 8 ? mul * p5.map(dl, 8, 12, 0, 0.7) : 0);
+      turtle.pensize(0.18 * mul + dl > 8 ? mul * mlt2 : 0);
       let r = randint(0, 10);
-      if (r < 3) turtle.pencolor("#009900AA");
-      else if (r > 6) turtle.pencolor("#667900AA");
-      else turtle.pencolor("#20BB00");
-      turtle.forward(dl - p5.map(startDl, 0, maxDl, 2, 8), mul);
+      if (r < 3) turtle.pencolor("#009900");
+      else if (r > 6) turtle.pencolor("#667900");
+      else turtle.pencolor("#20BBAA");
+      turtle.forward(dl - mlt, mul);
       turtle.pensize(stc.pop());
       turtle.pencolor("#111");
     } else if (ch === "[") {
-      turtle.pensize(turtle.pensize() * 0.7);
+      turtle.pensize(turtle.pensize() * 0.72);
       stc.push(turtle.pensize());
       stc.push(turtle.x);
       stc.push(turtle.y);
@@ -71,6 +71,8 @@ export function drawIt(p5: P5, pdl = 9, axiom = "2220") {
       // turtle.pendown();
     }
   }
+  if (Math.random() > 0.99) console.log(maxDelta);
+
   // turtle.update();
   // turtle.mainloop();
   return axiom;
