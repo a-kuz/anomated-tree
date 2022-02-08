@@ -1,10 +1,11 @@
 import P5 from "p5";
+import { maxDl } from "./consts";
 
 import { Turtle } from "./Turtle";
 let totalTime = 0;
-export function drawIt(p5: P5, pdl = 9, axiom) {
+export function drawIt(p5: P5, pdl = 19, axiom) {
   let startDl = pdl;
-  let maxDl = 12;
+
   Turtle.p5 = p5;
   let dl = pdl;
 
@@ -14,7 +15,7 @@ export function drawIt(p5: P5, pdl = 9, axiom) {
   const randint = p5.random;
 
   // console.log({ axiom });
-  let mul = p5.map(startDl, 0, maxDl, 0, 6);
+  let mul = p5.map(startDl, 0, maxDl, 0, 7);
   let lastDtime = 0;
   let maxDelta = 0;
 
@@ -30,33 +31,34 @@ export function drawIt(p5: P5, pdl = 9, axiom) {
   maxDelta = maxDelta > delta ? maxDelta : delta;
   lastDtime = dTime;
   let mlt = p5.map(startDl, 0, maxDl, 4, 10);
-  let mlt2 = p5.map(dl, 8, 12, 0, 0.7);
+  let mlt2 = p5.map(dl, 0, maxDl, 0.7, 0.9);
   for (let ch of Array.from(axiom)) {
     //const dTime2 = -1*iDivMod2*iMod+100*iDivMod2+(1−iDivMod2)*iMod;
 
-    if (ch === "+") turtle.right(randint(0, 13) + dTime * p5.random(0, 2));
-    else if (ch === "-") turtle.left(randint(0, 13) + dTime * p5.random(0, 2));
+    if (ch === "+") turtle.right(randint(0, 13) + dTime / 3);
+    else if (ch === "-") turtle.left(randint(0, 13) + dTime / 4);
     else if (ch === "2") {
-      if (randint(0, 10) > 4) {
+      if (randint(0, 10) < 4) {
         turtle.forward(dl, mul);
       }
     } else if (ch === "1") {
-      if (randint(0, 10) > 7) {
+      if (randint(0, 10) > 6) {
         turtle.forward(dl, mul);
       }
     } else if (ch === "0") {
-      stc.push(turtle.pensize());
+      // stc.push(turtle.pensize());
 
-      turtle.pensize(0.18 * mul + dl > 8 ? mul * mlt2 : 0);
-      let r = randint(0, 10);
-      if (r < 3) turtle.pencolor("#009900");
-      else if (r > 6) turtle.pencolor("#667900");
-      else turtle.pencolor("#20BBAA");
-      turtle.forward(dl - mlt, mul);
-      turtle.pensize(stc.pop());
-      turtle.pencolor("#111");
+      // turtle.pensize(0.18 * mul + dl > 8 ? mul * mlt2 : 0);
+      // turtle.pensize(0.18 * mul + dl > 8 ? mul * mlt2 : 0);
+      let r = randint(0, 1);
+      turtle.pencolor(
+        p5.lerpColor(p5.color(0, 0x99, 0), p5.color(0xa0, 0xbb, 0), r)
+      );
+      // turtle.pensize(stc.pop());
+      turtle.forward(dl, mul);
+      turtle.pencolor(p5.color("#111"));
     } else if (ch === "[") {
-      turtle.pensize(turtle.pensize() * 0.72);
+      turtle.pensize(turtle.pensize() * mlt2);
       stc.push(turtle.pensize());
       stc.push(turtle.x);
       stc.push(turtle.y);
@@ -71,7 +73,7 @@ export function drawIt(p5: P5, pdl = 9, axiom) {
       // turtle.pendown();
     }
   }
-  if (Math.random() > 0.99) console.log(maxDelta);
+  // if (Math.random() > 0.99) console.log(maxDelta);
 
   // turtle.update();
   // turtle.mainloop();
