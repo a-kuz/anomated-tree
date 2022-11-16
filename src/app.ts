@@ -1,3 +1,4 @@
+/// <reference path="../node_modules/@types/p5/global.d.ts" />
 import P5 from "p5";
 // import "p5/lib/addons/p5.dom";
 // import "p5/lib/addons/p5.sound";	// Include if needed
@@ -10,7 +11,7 @@ let axiom;
 
 let haveLive = 1;
 
-if (itr === 11) axiom = AXIOM11;
+if (itr === 16) axiom = AXIOM11;
 
 if (!axiom) {
   axiom = "2220";
@@ -19,7 +20,7 @@ if (!axiom) {
   // const t = Array.from(Array(itr).keys());
 
   for (let i = 0; i < itr; i += 1) {
-    for (let ch of Array.from(axiom)) {
+    for (let ch: string of Array.from(axiom)) {
       if (translate[ch]) axmTemp += translate[ch];
       else axmTemp += ch;
     }
@@ -36,6 +37,17 @@ const sketch = (p5: P5) => {
   p5.mouseClicked = (event) => {
     haveLive = haveLive ? 0 : 1;
   };
+  const reset = () => {
+    seed++;
+    dl = 4;
+    p5.loop();
+  };
+
+  p5.keyPressed = (event) => {
+    seed++;
+
+    p5.loop();
+  };
   // The sketch setup method
   p5.setup = () => {
     const canvas = p5.createCanvas(500, 700);
@@ -48,12 +60,6 @@ const sketch = (p5: P5) => {
     // p5.strokeJoin(p5.MITER);
   };
 
-  p5.reset = () => {
-    seed++;
-    dl = 4;
-    p5.loop();
-  };
-
   // p5.mouseClicked = () => {
   //   p5.reset();
   // };
@@ -61,7 +67,7 @@ const sketch = (p5: P5) => {
     p5.randomSeed(seed);
     // p5.text("!!!!!!!!", 1, 1, 100, 100);
 
-    p5.fill(0);
+    p5.fill(20);
 
     p5.background("#ddd");
     p5.fill("#ddd");
@@ -71,7 +77,7 @@ const sketch = (p5: P5) => {
     p5.fill("#111");
     p5.text(`fps: ${p5.round(p5.frameRate())}`, 0, 0, 100, 100);
     p5.text(`delta: ${p5.round(p5.deltaTime)}`, 0, 20, 100, 100);
-    p5.p5.translate(250, 700);
+    p5.translate(250, 700);
     drawIt(p5, dl, axiom);
 
     if (dl < maxDl * 0.9) {
@@ -80,7 +86,7 @@ const sketch = (p5: P5) => {
     } else {
       p5.noLoop();
       setTimeout(() => {
-        p5.reset();
+        reset();
       }, 50);
     }
   };
